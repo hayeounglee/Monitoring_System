@@ -1,0 +1,28 @@
+groups:
+  - name: node-alerts
+    rules:
+      - alert: HighCpuUsage
+        expr: 100 - (avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 80
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "CPU 사용률 높음 ({{ $labels.instance }})"
+          description: "{{ $labels.instance }} CPU 사용률이 5분간 80%를 초과했습니다."
+
+      - alert: InstanceDown
+        expr: up == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "서버 다운 ({{ $labels.instance }})"
+          description: "{{ $labels.instance }} 가 1분 이상 응답하지 않습니다."
+
+      - alert: ServerRebooted
+        expr: changes(node_boot_time_seconds[5m]) > 0
+        labels:
+          severity: warning
+        annotations:
+          summary: "서버 재부팅 감지 ({{ $labels.instance }})"
+          description: "{{ $labels.instance }} 가 재부팅되었습니다."

@@ -1,0 +1,16 @@
+global:
+  smtp_smarthost: 'localhost:25'
+  smtp_from: 'alertmanager@main.example.com'
+  smtp_require_tls: false
+
+route:
+  receiver: 'email-notify'
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 1h
+
+receivers:
+  - name: 'email-notify'
+    email_configs:
+      - to: 'medalo3920@itquoted.com'
+        send_resolved: true
